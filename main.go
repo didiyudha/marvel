@@ -8,6 +8,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 func main() {
@@ -38,7 +39,8 @@ func run() error {
 		} `yaml:"caching"`
 	}{}
 
-	b, err := ioutil.ReadFile("./config.yaml")
+	configFile := os.Getenv("MARVEL_CONFIG")
+	b, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		return err
 	}
