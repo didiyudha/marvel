@@ -145,37 +145,37 @@ func TestInitializeMarvelCharacter(t *testing.T) {
 		})
 	})
 
-	//t.Run("When successfully save characters to database", func(t *testing.T) {
-	//	const totalData = 10
-	//
-	//	resp := client.CharacterResponse{
-	//		Data: client.Data{
-	//			Total: totalData,
-	//		},
-	//	}
-	//
-	//	gomock.InOrder(
-	//		store.
-	//			EXPECT().
-	//			CleanUp(ctx).
-	//			Return(nil),
-	//		marvelClient.
-	//			EXPECT().
-	//			Characters(ctx, gomock.AssignableToTypeOf(time.Time{}),1, 0).
-	//			Return(resp, nil),
-	//		marvelClient.
-	//			EXPECT().
-	//			Characters(ctx, gomock.AssignableToTypeOf(time.Time{}), maxPerProcess, gomock.Any()).
-	//			Return(populateMarvelCharacterResponse(totalData), nil).Times(1),
-	//		store.
-	//			EXPECT().
-	//			Save(ctx, gomock.AssignableToTypeOf([]character.Character{})).
-	//			Return(nil),
-	//	)
-	//
-	//	err := m.InitializeMarvelCharacter(ctx)
-	//	assert.NoError(t, err)
-	//})
+	t.Run("When successfully save characters to database", func(t *testing.T) {
+		const totalData = 10
+
+		resp := client.CharacterResponse{
+			Data: client.Data{
+				Total: totalData,
+			},
+		}
+
+		gomock.InOrder(
+			store.
+				EXPECT().
+				CleanUp(ctx).
+				Return(nil),
+			marvelClient.
+				EXPECT().
+				Characters(ctx, gomock.AssignableToTypeOf(time.Time{}),1, 0).
+				Return(resp, nil),
+			marvelClient.
+				EXPECT().
+				Characters(ctx, gomock.AssignableToTypeOf(time.Time{}), maxPerProcess, gomock.Any()).
+				Return(populateMarvelCharacterResponse(totalData), nil).Times(1),
+			store.
+				EXPECT().
+				Save(ctx, gomock.AssignableToTypeOf([]character.Character{})).
+				Return(nil),
+		)
+
+		err := m.InitializeMarvelCharacter(ctx)
+		assert.NoError(t, err)
+	})
 }
 
 func TestGetTotalCharacter(t *testing.T) {
