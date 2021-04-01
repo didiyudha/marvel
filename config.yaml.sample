@@ -1,0 +1,16 @@
+port: 8080
+publicKey: <public key credential>
+privateKey: <private key credential>
+marvelHost: <marvel host>
+db:
+  user: <postgres username>
+  password: <postgress password>
+  host: <postgres host>
+  name: <database name>
+  maxIdleConns: <max idle connections>
+  maxOpenConns: <max open connections>
+  disableTLS: <true or false>
+caching:
+  addr: <redis address>
+  password: <redis password>
+  db: <redis database>
