@@ -11,19 +11,25 @@ type CommandExecutor interface {
 }
 
 type commandExecImpl struct {
-	MarvelCmdExecutor
+	MarvelCmdExecutor MarvelCmdExecutor
+	TableMigrator TableMigrator
 }
 
-func NewCommandExecutor(executor MarvelCmdExecutor) CommandExecutor {
+func NewCommandExecutor(executor MarvelCmdExecutor, migrator TableMigrator) CommandExecutor {
 	return &commandExecImpl{
 		MarvelCmdExecutor: executor,
+		TableMigrator: migrator,
 	}
 }
 
 func (c *commandExecImpl) Exec(cmd string) error {
 	switch cmd {
-	case "init":
-		return c.InitializeMarvelCharacter(context.Background())
+	case "characters":
+		return c.MarvelCmdExecutor.InitializeMarvelCharacter(context.Background())
+	case "migration":
+		return c.TableMigrator.MigrateTable(context.Background())
+	case "delete":
+		return c.TableMigrator.DeleteAll(context.Background())
 	default:
 		fmt.Println("Command not supported")
 		os.Exit(1)
