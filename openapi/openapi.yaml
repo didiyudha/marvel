@@ -1,0 +1,181 @@
+openapi: 3.0.0
+info:
+  title: OpenAPI Specification for Marvel
+  description: API Specification document of Marvel characters
+  termsOfService: http://didiyudha.com/tos
+  contact:
+    name: Didi Yudha Perwira
+    email: didiyudha@gmail.com
+    url: https://medium.com/@didiyudhaperwira
+  license:
+    name: MIT
+  version: '1.0'
+  
+externalDocs:
+  description: More information about Marvel API
+  url: https://developer.marvel.com
+  
+servers:
+  - url: http://localhost:8080
+    description: Local server
+  - url: http://{hostname}:{port}
+    description: Production Server
+    variables:
+      hostname:
+        default: localhost
+      port:
+        enum:
+          - '8080'
+        default: '8080'
+        
+tags:
+  - name: marvel
+    description: Marvel characters
+    externalDocs:
+      description: More information about Marvel characters
+      url: https://www.marvel.com/characters
+      
+paths:
+  /healthy:
+    summary: Get character id's
+    description: Get healthiness of the service
+    get:
+      tags: 
+        - marvel
+      summary: Healthiness check
+      description: Returns healthiness of the service
+      operationId: getHealthiness
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Healthy
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: OK
+        '500':
+          description: Service is not healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Not healthy
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: internal server error
+  /characters:
+    summary: Get character id's
+    description: Get all character id's from database
+    get:
+      tags: 
+        - marvel
+      summary: Get all the marvel character id
+      description: Returns the list of id marvel character
+      operationId: getCharacterId
+      responses:
+        '200':
+          description: Successfully returned all character id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                example: [1, 2, 3]
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Internal server error
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: database down
+  
+  /characters/{characterId}:
+    summary: Get one character
+    description: Get detail character by id
+    get:
+      tags:
+        - marvel
+      summary: Get specific character
+      description: Returns detail character
+      operationId: getDetailCharacter
+      parameters: 
+        - name: characterId
+          in: path
+          description: The unique character id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully returned the character details
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Represents a character entry
+                properties:
+                  id:
+                    type: integer
+                    description: Unique ID of the character
+                  name:
+                    type: string
+                    description: Name of the character
+                  description:
+                    type: string
+                    description: Description of the character
+                required: 
+                  - id
+                  - name
+                example:
+                  id: 1
+                  name: Ant Man
+                  description: A Small Man with A Big Power
+        '404':
+          description: Character not found
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Show not found message
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: Character not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Internal server error
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: database down
+    
+        
