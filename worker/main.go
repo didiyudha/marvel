@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/didiyudha/marvel/business/data/character"
 	"github.com/didiyudha/marvel/client"
 	"github.com/didiyudha/marvel/config"
@@ -11,8 +12,11 @@ import (
 )
 
 func main() {
+	run()
+}
 
-	configFile := "./../config.yaml"
+func run() {
+	configFile := "./config.yaml"
 	conf, err := config.Read(configFile)
 	if err != nil {
 		log.Fatal(err)
@@ -48,5 +52,6 @@ func main() {
 	marvelWorker := internal.NewMarvelWorker(store, marvelClient)
 	worker.AddFunc(marvelWorker)
 
+	fmt.Println("worker is ready to work")
 	worker.Run()
 }

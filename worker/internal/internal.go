@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	config = "@every 3s"
+	config = "@every 3m"
 )
 
 type Worker interface {

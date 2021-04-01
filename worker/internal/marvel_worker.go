@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"fmt"
 	"github.com/didiyudha/marvel/business/data/character"
 	"github.com/didiyudha/marvel/client"
 	"github.com/pkg/errors"
@@ -49,7 +50,7 @@ func findNewData(fromAPI []character.Character, fromDB []character.Character) []
 }
 
 func (m *marvelWorkerImpl) Do() {
-
+	fmt.Println("worker started")
 	ctx := context.Background()
 
 	charactersFromAPI, err := m.GetAllCharactersFromAPI(ctx)
@@ -66,8 +67,12 @@ func (m *marvelWorkerImpl) Do() {
 	newCharacters := findNewData(charactersFromAPI, charactersFromDB)
 
 	if len(newCharacters) > 0 {
-		m.Store.Save(ctx, newCharacters...)
+		if err := m.Store.Save(ctx, newCharacters...); err != nil {
+			fmt.Printf("[ERROR] save new characters by worker: %v\n", err)
+			return
+		}
 	}
+	fmt.Println("worker started")
 }
 
 func (m *marvelWorkerImpl) GetTotalCharacter(ctx context.Context) (total int, err error) {
