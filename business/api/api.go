@@ -10,6 +10,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"net/http"
 )
 
@@ -25,6 +26,7 @@ func New(db *sqlx.DB, redisClient *redis.Client) *Api {
 	httpHandler := handler.NewHTTPHandler(marvelUseCase)
 
 	e := echo.New()
+	e.Use(middleware.Logger())
 	e.GET("/healthy", healthy(db))
 	routes.Mount(e, httpHandler)
 
