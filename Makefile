@@ -5,3 +5,9 @@ mock:
 	mockgen -source=business/data/character/cache.go -destination=business/data/character/mock/cache_mock.go -package=mock
 test:
 	go test ./... -v
+characters:
+	go run ./cmd/main.go characters
+migration:
+	go run ./cmd/main.go migration
+delete:
+	go run ./cmd/main.go delete
