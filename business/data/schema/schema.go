@@ -30,3 +30,20 @@ func Migrate(ctx context.Context, db *sqlx.DB) error {
 	d := darwin.New(driver, darwin.ParseMigrations(schemaDoc))
 	return d.Migrate()
 }
+
+func DeleteAll(ctx context.Context, db *sqlx.DB) error {
+
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	if _, err := tx.ExecContext(ctx, deleteDoc); err != nil {
+		if err := tx.Rollback(); err != nil {
+			return err
+		}
+		return err
+	}
+
+	return tx.Commit()
+}
