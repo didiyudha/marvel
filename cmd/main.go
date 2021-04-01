@@ -21,7 +21,7 @@ func main() {
 func run() error {
 	cmd := os.Args[1]
 
-	conf, err := config.Read("./../config.yaml")
+	conf, err := config.Read("./config.yaml")
 	if err != nil {
 		return err
 	}
@@ -40,6 +40,7 @@ func run() error {
 	if err != nil {
 		return errors.Wrap(err, "open connection to database")
 	}
+	defer db.Close()
 
 	cred := client.CredentialRequest{
 		Host:       conf.MarvelHost,
@@ -51,8 +52,10 @@ func run() error {
 	restyClient := resty.New()
 	marvelClient := client.NewMarvelClient(cred, restyClient)
 
+	tableMigrator := exec.NewTableMigrator(db)
+
 	marvelCmdExecutor := exec.NewMarvelCmdExecutor(store, marvelClient)
-	cmdExecutor := exec.NewCommandExecutor(marvelCmdExecutor)
+	cmdExecutor := exec.NewCommandExecutor(marvelCmdExecutor, tableMigrator)
 
 	return cmdExecutor.Exec(cmd)
 }
