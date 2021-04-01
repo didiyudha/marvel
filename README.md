@@ -10,6 +10,7 @@ You need to register and generate public and private key to access the API.
 * Postgres 9.6+
 * Redis
 * Marvel API credentials
+* Docker
 
 ## Note
 At this moment. I assume you already installed Postgres and Redis in your local machine. In addition, please 
@@ -23,16 +24,6 @@ make migration
 ## Install Dependencies
 ```shell
 make deps
-```
-
-## Generate Mock
-```shell
-make mock
-```
-
-## Run Unit Test
-```shell
-make test
 ```
 
 ## Build Binary
@@ -53,12 +44,32 @@ make marvel-worker-linux
 make marvel-worker-osx
 ```
 
+## Generate Mock
+```shell
+make mock
+```
+
+## Run Unit Test
+```shell
+make test
+```
+
 ## Initialize Data
 The following command will delete all data from `characters` table in the `marvel` database, calling Marvel API 
 to get the character data and insert them into characters table. Here's the command:
 ```shell
 make characters
 ```
+
+## Serve Swagger UI
+```shell
+cd openapi 
+```
+```shell
+docker-compose up 
+```
+
+![](swagger.png?raw=true)
 
 ## System Design
 ![](system-design.png?raw=true)
