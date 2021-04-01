@@ -2,6 +2,7 @@ package exec
 
 import (
 	"context"
+	"fmt"
 	"github.com/didiyudha/marvel/business/data/character"
 	"github.com/didiyudha/marvel/client"
 	"github.com/pkg/errors"
@@ -22,7 +23,12 @@ type marvelCmdExecImpl struct {
 	MarvelClient client.MarvelClient
 }
 
-
+func NewMarvelCmdExecutor(store character.Store, marvelClient client.MarvelClient) MarvelCmdExecutor {
+	return &marvelCmdExecImpl{
+		Store:        store,
+		MarvelClient: marvelClient,
+	}
+}
 
 func (m *marvelCmdExecImpl) InitializeMarvelCharacter(ctx context.Context) error {
 
@@ -40,12 +46,19 @@ func (m *marvelCmdExecImpl) InitializeMarvelCharacter(ctx context.Context) error
 	var offset int
 	var results []client.Result
 
+	fmt.Println("initialization characters started")
+
+	startTime := time.Now()
+
 	for i := 1; i <= totalProcessing; i++ {
 		ts := time.Now()
 		resp, err := m.MarvelClient.Characters(ctx, ts, maxPerProcess, offset)
 		if err != nil {
 			return errors.Wrap(err, "get characters")
 		}
+
+		fmt.Printf("[%d/%d] processing...\n", i, totalProcessing)
+
 		results = append(results, resp.Data.Results...)
 		offset = offset + maxPerProcess
 	}
@@ -62,8 +75,14 @@ func (m *marvelCmdExecImpl) InitializeMarvelCharacter(ctx context.Context) error
 	}
 
 	if err := m.Store.Save(ctx, characters...); err != nil {
+		fmt.Printf("[ERROR] %v\n", err)
 		return errors.Wrapf(err, "save characters")
 	}
+
+	duration := time.Now().Sub(startTime).Milliseconds()
+
+	fmt.Sprintf("character initialization is finish within %v ms", duration)
+
 	return nil
 }
 
