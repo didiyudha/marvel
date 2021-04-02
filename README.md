@@ -44,6 +44,35 @@ make marvel-worker-linux
 make marvel-worker-osx
 ```
 
+## Run Source Code
+Before running the source code, you need to set the environment variable `MARVEL_CONFIG` with the value is the path 
+of your configuration file. `export MARVEL_CONFIG=$(pwd)/config.yaml`. I suggest you to run `make characters` to get the data
+from the API and store it into the database before running the application.
+
+* ### Run Service
+    ```shell
+    make run-service
+    ```
+
+* ### Run Worker
+    At this moment. Worker will be running `@hourly`
+    ```shell
+    make run-worker
+    ```
+
+## Run Binary
+Don't forget to set `MARVEL_CONFIG` environment variable like the previous step.
+
+* ### Run service binary
+    ```shell
+    ./marvel-linux
+    ```
+
+* ### Run worker binary
+    ```shell
+    ./marvel-worker-linux
+    ```
+
 ## Generate Mock
 ```shell
 make mock
@@ -53,6 +82,7 @@ make mock
 ```shell
 make test
 ```
+
 
 ## Initialize Data
 The following command will delete all data from `characters` table in the `marvel` database, calling Marvel API 
@@ -71,8 +101,21 @@ docker-compose up
 
 ![](swagger.png?raw=true)
 
-## System Design
+## System Design and Caching Strategy
 ![](system-design.png?raw=true)
+
+The main idea of the design is, we initialize the data for the first time using `marvel command`. The command
+will delete all the data from `characters` table, call the Marvel API to get character data and store it to
+the database (PostgreSQL). The worker will play crucial part since it will call Marvel API periodically, and compare
+data from database to Marvel API data. The comparison purpose is to get the new data from the API. Only new data that
+will be stored to database. At this time the worker will be running `@hourly`. The Marvel service provides API to get 
+characters data. Redis will be the first option to get the data. If data that we are looking for is not exists
+in the Redis, Marvel service will find it to the database. 
+
+* ### Pros of the design
+    * If the 3rd party API is broken, we still be able to serve the data since it is stored in our internal database.
+* ### Cons of the design
+  * Complexity of the architecture is higher than we just have one service to do it all.
 
 ## Configuration
 ```yaml
