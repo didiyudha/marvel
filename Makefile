@@ -1,9 +1,16 @@
+.PHONY: clean run-service run-worker marvel-linux marvel-osx marvel-worker-linux marvel-worker-osx deps test characters migration delete mock
 
 clean:
 	[ -f marvel-linux ] && rm marvel-linux || true
 	[ -f marvel-osx ] && rm marvel-osx || true
 	[ -f marvel-worker-linux ] && rm marvel-worker-linux || true
 	[ -f marvel-worker-osx ] && rm marvel-worker-osx || true
+
+run-service:
+	go run main.go
+
+run-worker:
+	go run worker/main.go
 
 marvel-linux: main.go
 	GOOS=linux GOARCH=amd64 go build -a -ldflags '-extldflags "static"' -o $@
