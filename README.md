@@ -1,16 +1,18 @@
 ![](marvel.png?raw=true)
 
+This service is built with :heart: and Go.
+
 # Marvel API Implementation
 This is a simple implementation to consume the API of character Marvel. 
 For more information you can take look [here](https://developer.marvel.com/). 
 You need to register and generate public and private key to access the API.
 
 ## Requirements
-* Golang version go1.16+ (Since we use embed functionality for migration)
-* Postgres 9.6+
-* Redis
-* Marvel API credentials
-* Docker
+* [Golang](https://golang.org/dl/) version go1.16+ (Since we use embed functionality for migration)
+* [Postgres](https://www.postgresql.org/download/) 9.6+
+* [Redis](https://redis.io/)
+* [Marvel API](https://developer.marvel.com/) credentials
+* [Docker](https://www.docker.com/)
 
 ## Note
 At this moment. I assume you already installed Postgres and Redis in your local machine. In addition, please 
