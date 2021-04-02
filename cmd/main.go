@@ -19,9 +19,11 @@ func main() {
 }
 
 func run() error {
-	cmd := os.Args[1]
 
-	conf, err := config.Read("./config.yaml")
+	cmd := os.Args[1]
+	configFile := os.Getenv("MARVEL_CONFIG")
+
+	conf, err := config.Read(configFile)
 	if err != nil {
 		return err
 	}

@@ -9,6 +9,7 @@ import (
 	"github.com/didiyudha/marvel/worker/internal"
 	"github.com/go-resty/resty/v2"
 	"log"
+	"os"
 )
 
 func main() {
@@ -16,7 +17,7 @@ func main() {
 }
 
 func run() {
-	configFile := "./config.yaml"
+	configFile := os.Getenv("MARVEL_CONFIG")
 	conf, err := config.Read(configFile)
 	if err != nil {
 		log.Fatal(err)
