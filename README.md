@@ -1,7 +1,5 @@
 ![](marvel.png?raw=true)
 
-# This service is built with :heart: and Go.
-
 # Marvel API Implementation
 This is a simple implementation to consume the API of character Marvel. 
 For more information you can take look [here](https://developer.marvel.com/). 
