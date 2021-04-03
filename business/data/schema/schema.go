@@ -15,6 +15,9 @@ var (
 
 	//go:embed sql/delete.sql
 	deleteDoc string
+
+	//go:embed sql/seed.sql
+	seed string
 )
 
 func Migrate(ctx context.Context, db *sqlx.DB) error {
@@ -29,6 +32,22 @@ func Migrate(ctx context.Context, db *sqlx.DB) error {
 
 	d := darwin.New(driver, darwin.ParseMigrations(schemaDoc))
 	return d.Migrate()
+}
+
+func Seed(ctx context.Context, db *sqlx.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	if _, err := tx.ExecContext(ctx, seed); err != nil {
+		if err := tx.Rollback(); err != nil {
+			return err
+		}
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func DeleteAll(ctx context.Context, db *sqlx.DB) error {

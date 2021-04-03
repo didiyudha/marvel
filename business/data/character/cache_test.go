@@ -202,7 +202,7 @@ func TestSetAll(t *testing.T) {
 				SetErr(expectedErr)
 
 			err = caching.SetAll(ctx, characters)
-			assert.Equal(t, expectedErr, err)
+			assert.True(t, errors.Cause(err) == expectedErr)
 
 		})
 

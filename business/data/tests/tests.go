@@ -59,8 +59,8 @@ func NewDBContainer(t *testing.T, dbc Container) (logger *log.Logger, db *sqlx.D
 	return
 }
 
-func NewCachingContainer(t *testing.T, dbc Container) (logger *log.Logger, redisClient *redis.Client, teardown func()) {
-	c := docker.StartContainer(t, dbc.Image, dbc.Port, dbc.Args...)
+func NewCachingContainer(t *testing.T, cachingContainer Container) (logger *log.Logger, redisClient *redis.Client, teardown func()) {
+	c := docker.StartContainer(t, cachingContainer.Image, cachingContainer.Port, cachingContainer.Args...)
 
 	var err error
 
