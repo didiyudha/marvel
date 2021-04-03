@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-var dbc = tests.DBContainer{
+var dbc = tests.Container{
 	Image: "postgres:13-alpine",
 	Port:  "5432",
 	Args:  []string{"-e", "POSTGRES_PASSWORD=postgres"},

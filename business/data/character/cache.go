@@ -79,7 +79,13 @@ func (c *cachingImpl) SetAll(ctx context.Context, characters []Character) error 
 		return errors.Wrap(err, "unmarshal characters data")
 	}
 
-	return c.redisClient.Set(ctx, charactersKey, string(b), 5*time.Minute).Err()
+	data := string(b)
+	err = c.redisClient.Set(ctx, charactersKey, data, 5*time.Minute).Err()
+	if err != nil {
+		return errors.Wrap(err, "set all characters")
+	}
+
+	return nil
 }
 
 func (c *cachingImpl) SetOne(ctx context.Context, character Character) error {
