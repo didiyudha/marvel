@@ -1,5 +1,7 @@
 ![](marvel.png?raw=true)
 
+[![Actions Status: test](https://github.com/didiyudha/marvel/workflows/test/badge.svg)](https://github.com/didiyudha/marvel/actions?query=workflow%3A"test")
+
 # Marvel API Implementation
 This is a simple implementation to consume the API of character Marvel. 
 For more information you can take look [here](https://developer.marvel.com/). 
