@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"github.com/didiyudha/marvel/business/data/character"
 	"github.com/didiyudha/marvel/business/usecase"
@@ -11,7 +12,11 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
 )
 
 type Api struct {
@@ -48,5 +53,26 @@ func healthy(db *sqlx.DB) func(c echo.Context) error {
 }
 
 func (a *Api) Serve(port int) error {
-	return a.e.Start(fmt.Sprintf(":%d", port))
+
+	go func() {
+		if err := a.e.Start(fmt.Sprintf(":%d", port)); err != nil && err != http.ErrServerClosed {
+			log.Printf("Error : %v\n", err)
+			log.Printf("Server shutting down...")
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds.
+	// Use a buffered channel to avoid missing signals as recommended for signal.Notify
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+
+	<-quit
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := a.e.Shutdown(ctx); err != nil {
+		a.e.Logger.Fatal(err)
+	}
+
+	return nil
 }
