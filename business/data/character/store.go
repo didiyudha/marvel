@@ -77,7 +77,7 @@ func (p *persistentStorage) FindAll(ctx context.Context) ([]Character, error) {
 	q := `SELECT id,
 			name,
 			description
-		FROM characters`
+		FROM "characters"`
 
 	if err := p.db.SelectContext(ctx, &characters, q); err != nil {
 		return nil, errors.Wrap(err, "select all characters")
