@@ -9,11 +9,17 @@ RUN make deps
 COPY ./ ./
 RUN make marvel-linux
 RUN echo "$APP_CONF" > /usr/app/config.yaml
+RUN cat /usr/app/config.yaml
 
 FROM alpine
-WORKDIR /usr/app/
-COPY --from=0 /usr/app/marvel-linux /usr/app/
-COPY --from=0 /usr/app/config.yaml /usr/app/config.yaml
+RUN apk upgrade --update-cache --available && \
+    apk add openssl && \
+    rm -rf /var/cache/apk/*
+
+WORKDIR /app
+COPY --from=0 /usr/app/marvel-linux ./
+COPY --from=0 /usr/app/config.yaml ./
+RUN ls -al
 ENV MARVEL_CONFIG=./config.yaml
 EXPOSE 8080
-ENTRYPOINT ["/usr/app/marvel-linux"]
+ENTRYPOINT ["/app/marvel-linux"]
