@@ -11,4 +11,4 @@ FROM alpine
 
 WORKDIR /app
 COPY --from=0 /usr/app/marvel-worker-linux ./
-ENTRYPOINT ["/app/marvel-linux"]
+ENTRYPOINT ["/app/marvel-worker-linux"]
