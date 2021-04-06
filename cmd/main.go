@@ -1,15 +1,15 @@
 package main
 
 import (
+	"github.com/pkg/errors"
 	"github.com/didiyudha/marvel/business/data/character"
 	"github.com/didiyudha/marvel/client"
 	"github.com/didiyudha/marvel/cmd/exec"
 	"github.com/didiyudha/marvel/config"
 	"github.com/didiyudha/marvel/foundation/database"
-	"github.com/go-resty/resty/v2"
-	"github.com/pkg/errors"
 	"log"
 	"os"
+	"github.com/go-resty/resty/v2"
 )
 
 func main() {
