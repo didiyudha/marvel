@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: marvel-secret-config
+type: Opaque
+stringData:
+  config.yaml: |
+    port: 8080
+    publicKey: <public key from marvel api>
+    privateKey: <private key from marvel api>
+    marvelHost: <marvel api host>
+    db:
+      user: postgres
+      password: <postgres password>
+      host: postgres
+      name: marvel
+      maxIdleConns: 5
+      maxOpenConns: 5
+      disableTLS: true
+    caching:
+      addr: redis
+      password: ''
+      db: 1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marvel
+  labels:
+    app: marvel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: marvel
+  template:
+    metadata:
+      name: marvel
+      labels:
+        app: marvel
+    spec:
+      volumes:
+        - name: marvel-volume
+          secret:
+            secretName: marvel-secret-config
+            defaultMode: 0400
+      containers:
+        - name: marvel
+          image: didiyudha/marvel:1.0.0
+          env:
+            - name: MARVEL_CONFIG
+              value: '/etc/config/config.yaml'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+              name: marvel
+          volumeMounts:
+            - mountPath: "/etc/config"
+              name: marvel-volume
+              readOnly: true
+
