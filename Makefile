@@ -19,7 +19,7 @@ marvel-osx: main.go
 	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags '-s -w' -o $@
 
 marvel-worker-linux: ./worker/main.go
-	GOOS=linux GOARCH=amd64 go build -a -ldflags '-extldflags "static"' -o $@
+	GOOS=linux GOARCH=amd64 go build -a -ldflags '-extldflags "static"' -o $@ ./worker/main.go
 
 marvel-worker-osx: ./worker/main.go
 	GOOS=darwin GOARCH=amd64 go build -ldflags '-s -w' -o $@
